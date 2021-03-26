@@ -12,6 +12,7 @@ directories = {
 
 print('Помощник по документообороту v1.0')
 
+
 def p_people():
     error = 0
     while error == 0:
@@ -24,6 +25,7 @@ def p_people():
         if len(dct1) == error:
             print('Такой документ не найден. Проверьте номер документа.')
             error = 0
+
 
 def s_shelf():
     error = 0
@@ -38,9 +40,11 @@ def s_shelf():
             print('Такой документ не найден. Проверьте номер документа.')
             error = 0
 
+
 def l_list_all_doc():
     for dct1 in documents:
         print(f'- {" ".join(dct1.values())}.')
+
 
 def a_add():
     number_shelf = 0
@@ -58,29 +62,48 @@ def a_add():
     directories[str(number_shelf)].append(new_doc['number'])
     print(f'Документ "{" ".join(new_doc.values())}" добавлен и хранится на полке №{number_shelf}.')
 
+
 def d_delete():
     error = 0
     while error == 0:
+        b = input('Введите номер документа для его удаления: ')
+        if b == '-1':
+            error = 1
+        else:
+            for number, dct1 in enumerate(list(documents)):
+                error += 1
+                if dct1['number'] == b:
+                    print(f'Документ "{" ".join(dct1.values())}" удален из каталога и с полки хранения', end=' ')
+                    del(documents[number])
+                    error += 1
+                    for key, val in list(directories.items()):
+                        for number_position, number_doc in enumerate(val):
+                            if number_doc == b:
+                                print(f'№{key}.')
+                                del(directories[key][number_position])
+            if len(dct1) == error:
+                print('Такой документ не найден. Проверьте номер документа. Для выхода введите: -1')
+                error = 0
+
+#  команда, которая спросит номер документа и целевую полку и переместит его с текущей полки на целевую.
+#  Корректно обработайте кейсы, когда пользователь пытается переместить несуществующий документ или
+#  переместить документ на несуществующую полку;
+def m_move():
+    true_doc = True
+    true_shelf = True
+    while true_doc:
         b = input('Введите номер документа: ')
-        for number, dct1 in enumerate(list(documents)):
+        for dct1 in documents:
             error += 1
             if dct1['number'] == b:
-                print(f'Документ "{" ".join(dct1.values())}" удален из каталога и с полки хранения.')
-                print(documents)
-                del(documents[number])
+                print(f'Документ на имя: {dct1["name"]}')
                 error += 1
-                print(documents)
-                for key, val in list(directories.items()):
-                    for number_position, number_doc in enumerate(val):
-                        if number_doc == b:
-                            print(directories)
-                            del(directories[key][number_position])
-                            print(directories)
         if len(dct1) == error:
             print('Такой документ не найден. Проверьте номер документа.')
             error = 0
 
-# def m_move():
+        shelf = input('Введите номер полки куда переместить документ: ')
+
 
 
 # def as_add_shelf():
@@ -91,4 +114,5 @@ def vvod():
     if a == 'p':
         number_doc()
 
-d_delete()
+
+m_move()
